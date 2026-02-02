@@ -1,50 +1,55 @@
-# Welcome to your Expo app 👋
+# Mobile Attendance Tracker
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Overview
+Mobile Attendance Tracker is an application designed to simplify attendance management, enabling teachers and organization managers to monitor attendance seamlessly. With its user-friendly interface and integration of modern features, it caters to both in-person and virtual settings.
 
-## Get started
+## Features
+- **User Authentication**: Secure login system for both administrators and attendees.
+- **Attendance Insights**: Generate daily, weekly, or custom reports.
+- **QR Scanning**: Scan QR codes to register attendance quickly.
+- **Notifications**: Reminders for attendees who miss submissions.
+- **Export Data**: Export attendance reports in formats like CSV or PDF.
 
-1. Install dependencies
-
+## Installation
+To run this project locally, follow the steps below:
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/Sasudul/Mobile-Attendance-Tracker.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd Mobile-Attendance-Tracker
+   ```
+3. Install dependencies:
    ```bash
    npm install
    ```
-
-2. Start the app
-
+4. Configure environment variables by creating a `.env` file.
+5. Run the app:
    ```bash
-   npx expo start
+   npm start
    ```
 
-In the output, you'll find options to open the app in a
+## Technologies Used
+- **Frontend**: React Native, Expo
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **Authentication**: Firebase Authentication
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## How It Works
+1. **Setup**:
+   - Administrator sets up the attendee list and generates session QR codes.
+2. **Attendance Registration**:
+   - Attendees scan the QR code through the app or enter the session details manually.
+3. **Data Management**:
+   - The system updates reports automatically in real-time.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Contributors
+- [Sasudul](https://github.com/Sasudul)
+- Contributions are welcome via pull requests!
 
-## Get a fresh project
+## License
+This project is licensed under the [MIT License](LICENSE).
 
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Feedback
+If you find any issues or want to suggest improvements, feel free to create an issue in the repository.
