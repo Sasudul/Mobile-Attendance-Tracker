@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 interface StatCardProps {
   label: string;
@@ -7,24 +7,39 @@ interface StatCardProps {
   color?: string;
 }
 
+const colorMap: Record<string, string> = {
+  blue: '#2563eb',
+  green: '#16a34a',
+  red: '#dc2626',
+  purple: '#9333ea',
+};
+
 export const StatCard: React.FC<StatCardProps> = ({ 
   label, 
   value, 
   color = 'blue' 
 }) => {
-  const colorClasses = {
-    blue: 'text-blue-600',
-    green: 'text-green-600',
-    red: 'text-red-600',
-    purple: 'text-purple-600'
-  };
-
   return (
-    <View className="items-center">
-      <Text className={`text-3xl font-bold ${colorClasses[color as keyof typeof colorClasses] || colorClasses.blue}`}>
+    <View style={styles.container}>
+      <Text style={[styles.value, { color: colorMap[color] || colorMap.blue }]}>
         {value}
       </Text>
-      <Text className="text-sm text-gray-600 mt-1">{label}</Text>
+      <Text style={styles.label}>{label}</Text>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+  },
+  value: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  label: {
+    fontSize: 14,
+    color: '#4b5563',
+    marginTop: 4,
+  },
+});

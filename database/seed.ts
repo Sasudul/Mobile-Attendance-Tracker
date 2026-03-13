@@ -2,8 +2,7 @@ import { database } from './db';
 
 export const seedDatabase = () => {
   try {
-    // Seed Students
-const students = [
+    const students = [
       { name: 'Kasun Perera', rollNumber: '101', class: 'CS-A' },
       { name: 'Tharushi Silva', rollNumber: '102', class: 'CS-A' },
       { name: 'Nuwan Bandara', rollNumber: '103', class: 'CS-A' },
@@ -28,7 +27,6 @@ const students = [
       console.log('Students seeded successfully');
     }
 
-    // Seed Subjects
     const subjects = [
       { name: 'Mathematics', code: 'MATH101' },
       { name: 'Computer Science', code: 'CS101' },

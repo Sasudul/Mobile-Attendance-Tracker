@@ -5,7 +5,7 @@ import { database } from '@/database/db';
 import { AttendanceRecord } from '@/types';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MarkAttendanceScreen() {
@@ -16,9 +16,7 @@ export default function MarkAttendanceScreen() {
     Omit<AttendanceRecord, 'id' | 'timestamp'>[]
   >([]);
 
-  useEffect(() => {
-    loadStudents();
-  }, []);
+  useEffect(() => { loadStudents(); }, []);
 
   const loadStudents = () => {
     const students = database.getStudentsByClass(className as string);
@@ -34,10 +32,7 @@ export default function MarkAttendanceScreen() {
     setAttendanceRecords(records);
   };
 
-  const updateAttendanceStatus = (
-    index: number,
-    status: 'present' | 'absent'
-  ) => {
+  const updateAttendanceStatus = (index: number, status: 'present' | 'absent') => {
     const updated = [...attendanceRecords];
     updated[index].status = status;
     setAttendanceRecords(updated);
@@ -46,37 +41,23 @@ export default function MarkAttendanceScreen() {
   const handleSave = () => {
     try {
       database.saveAttendance(attendanceRecords);
-      Alert.alert('Success', 'Attendance saved successfully!', [
-        {
-          text: 'OK',
-          onPress: () => router.back(),
-        },
-      ]);
-    } catch (error) {
-      Alert.alert('Error', 'Failed to save attendance');
-    }
+      Alert.alert('Success', 'Attendance saved successfully!', [{ text: 'OK', onPress: () => router.back() }]);
+    } catch (error) { Alert.alert('Error', 'Failed to save attendance'); }
   };
 
-  const presentCount = attendanceRecords.filter(
-    (r) => r.status === 'present'
-  ).length;
-  const absentCount = attendanceRecords.filter(
-    (r) => r.status === 'absent'
-  ).length;
+  const presentCount = attendanceRecords.filter((r) => r.status === 'present').length;
+  const absentCount = attendanceRecords.filter((r) => r.status === 'absent').length;
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView style={styles.safeArea}>
       <Header
         title="Mark Attendance"
         subtitle={`${subjectName} • ${className} • ${date}`}
         onBack={() => router.back()}
-        rightButton={{
-          icon: 'save',
-          onPress: handleSave,
-        }}
+        rightButton={{ icon: 'save', onPress: handleSave }}
       />
 
-      <ScrollView className="flex-1 px-4 pt-4">
+      <ScrollView style={styles.list}>
         {attendanceRecords.map((record, index) => (
           <AttendanceCard
             key={index}
@@ -88,9 +69,8 @@ export default function MarkAttendanceScreen() {
         ))}
       </ScrollView>
 
-      {/* Stats Footer */}
-      <View className="bg-white border-t border-gray-200 p-4">
-        <View className="flex-row justify-around">
+      <View style={styles.footer}>
+        <View style={styles.statsRow}>
           <StatCard label="Present" value={presentCount} color="green" />
           <StatCard label="Absent" value={absentCount} color="red" />
           <StatCard label="Total" value={attendanceRecords.length} color="blue" />
@@ -99,3 +79,10 @@ export default function MarkAttendanceScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: '#f9fafb' },
+  list: { flex: 1, paddingHorizontal: 16, paddingTop: 16 },
+  footer: { backgroundColor: 'white', borderTopWidth: 1, borderTopColor: '#e5e7eb', padding: 16 },
+  statsRow: { flexDirection: 'row', justifyContent: 'space-around' },
+});

@@ -4,15 +4,7 @@ import { database } from '@/database/db';
 import { Student } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import {
-    Alert,
-    Modal,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { Alert, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function StudentsScreen() {
@@ -20,15 +12,9 @@ export default function StudentsScreen() {
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [filterClass, setFilterClass] = useState<string | null>(null);
-  const [newStudent, setNewStudent] = useState({
-    name: '',
-    rollNumber: '',
-    class: 'CS-A',
-  });
+  const [newStudent, setNewStudent] = useState({ name: '', rollNumber: '', class: 'CS-A' });
 
-  useEffect(() => {
-    loadStudents();
-  }, []);
+  useEffect(() => { loadStudents(); }, []);
 
   useEffect(() => {
     if (filterClass) {
@@ -38,23 +24,12 @@ export default function StudentsScreen() {
     }
   }, [students, filterClass]);
 
-  const loadStudents = () => {
-    const allStudents = database.getAllStudents();
-    setStudents(allStudents);
-  };
+  const loadStudents = () => { setStudents(database.getAllStudents()); };
 
   const handleAddStudent = () => {
-    if (!newStudent.name || !newStudent.rollNumber) {
-      Alert.alert('Error', 'Please fill all fields');
-      return;
-    }
-
+    if (!newStudent.name || !newStudent.rollNumber) { Alert.alert('Error', 'Please fill all fields'); return; }
     try {
-      database.addStudent(
-        newStudent.name,
-        newStudent.rollNumber,
-        newStudent.class
-      );
+      database.addStudent(newStudent.name, newStudent.rollNumber, newStudent.class);
       loadStudents();
       setShowAddModal(false);
       setNewStudent({ name: '', rollNumber: '', class: 'CS-A' });
@@ -65,159 +40,62 @@ export default function StudentsScreen() {
   };
 
   const handleDeleteStudent = (id: number) => {
-    Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this student?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            database.deleteStudent(id);
-            loadStudents();
-          },
-        },
-      ]
-    );
+    Alert.alert('Confirm Delete', 'Are you sure you want to delete this student?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive', onPress: () => { database.deleteStudent(id); loadStudents(); } },
+    ]);
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
-      <Header
-        title="Students"
-        subtitle={`${filteredStudents.length} students`}
-        rightButton={{
-          icon: 'add-circle',
-          onPress: () => setShowAddModal(true),
-        }}
-      />
+    <SafeAreaView style={styles.safeArea}>
+      <Header title="Students" subtitle={`${filteredStudents.length} students`} rightButton={{ icon: 'add-circle', onPress: () => setShowAddModal(true) }} />
 
-      {/* Filter Buttons */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        className="px-4 py-3 bg-white border-b border-gray-100"
-      >
-        <TouchableOpacity
-          className={`px-4 py-2 rounded-lg mr-2 ${
-            !filterClass ? 'bg-blue-600' : 'bg-gray-100'
-          }`}
-          onPress={() => setFilterClass(null)}
-        >
-          <Text
-            className={`font-semibold ${
-              !filterClass ? 'text-white' : 'text-gray-700'
-            }`}
-          >
-            All
-          </Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterBar} contentContainerStyle={styles.filterBarContent}>
+        <TouchableOpacity style={[styles.chip, !filterClass ? styles.chipActive : styles.chipInactive]} onPress={() => setFilterClass(null)}>
+          <Text style={[styles.chipText, !filterClass ? styles.chipTextActive : styles.chipTextInactive]}>All</Text>
         </TouchableOpacity>
         {['CS-A', 'CS-B'].map((cls) => (
-          <TouchableOpacity
-            key={cls}
-            className={`px-4 py-2 rounded-lg mr-2 ${
-              filterClass === cls ? 'bg-blue-600' : 'bg-gray-100'
-            }`}
-            onPress={() => setFilterClass(cls)}
-          >
-            <Text
-              className={`font-semibold ${
-                filterClass === cls ? 'text-white' : 'text-gray-700'
-              }`}
-            >
-              {cls}
-            </Text>
+          <TouchableOpacity key={cls} style={[styles.chip, filterClass === cls ? styles.chipActive : styles.chipInactive]} onPress={() => setFilterClass(cls)}>
+            <Text style={[styles.chipText, filterClass === cls ? styles.chipTextActive : styles.chipTextInactive]}>{cls}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
 
-      <ScrollView className="flex-1 px-4 pt-4">
-        {filteredStudents.map((student) => (
-          <StudentCard
-            key={student.id}
-            student={student}
-            onDelete={handleDeleteStudent}
-          />
-        ))}
-
+      <ScrollView style={styles.list}>
+        {filteredStudents.map((student) => (<StudentCard key={student.id} student={student} onDelete={handleDeleteStudent} />))}
         {filteredStudents.length === 0 && (
-          <View className="items-center justify-center py-20">
+          <View style={styles.emptyState}>
             <Ionicons name="people-outline" size={64} color="#d1d5db" />
-            <Text className="text-gray-400 text-lg mt-4">No students found</Text>
+            <Text style={styles.emptyText}>No students found</Text>
           </View>
         )}
       </ScrollView>
 
-      {/* Add Student Modal */}
-      <Modal
-        visible={showAddModal}
-        animationType="slide"
-        transparent
-        onRequestClose={() => setShowAddModal(false)}
-      >
-        <View className="flex-1 justify-end bg-black/50">
-          <View className="bg-white rounded-t-3xl p-6">
-            <View className="flex-row justify-between items-center mb-6">
-              <Text className="text-2xl font-bold text-gray-800">
-                Add New Student
-              </Text>
-              <TouchableOpacity onPress={() => setShowAddModal(false)}>
-                <Ionicons name="close" size={28} color="#6b7280" />
-              </TouchableOpacity>
+      <Modal visible={showAddModal} animationType="slide" transparent onRequestClose={() => setShowAddModal(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Add New Student</Text>
+              <TouchableOpacity onPress={() => setShowAddModal(false)}><Ionicons name="close" size={28} color="#6b7280" /></TouchableOpacity>
             </View>
 
-            <Text className="text-sm text-gray-600 mb-2">Student Name</Text>
-            <TextInput
-              className="bg-gray-100 rounded-lg p-4 mb-4 text-gray-800"
-              value={newStudent.name}
-              onChangeText={(text) =>
-                setNewStudent({ ...newStudent, name: text })
-              }
-              placeholder="Enter student name"
-              placeholderTextColor="#9ca3af"
-            />
+            <Text style={styles.inputLabel}>Student Name</Text>
+            <TextInput style={styles.input} value={newStudent.name} onChangeText={(text) => setNewStudent({ ...newStudent, name: text })} placeholder="Enter student name" placeholderTextColor="#9ca3af" />
 
-            <Text className="text-sm text-gray-600 mb-2">Roll Number</Text>
-            <TextInput
-              className="bg-gray-100 rounded-lg p-4 mb-4 text-gray-800"
-              value={newStudent.rollNumber}
-              onChangeText={(text) =>
-                setNewStudent({ ...newStudent, rollNumber: text })
-              }
-              placeholder="Enter roll number"
-              placeholderTextColor="#9ca3af"
-              keyboardType="numeric"
-            />
+            <Text style={styles.inputLabel}>Roll Number</Text>
+            <TextInput style={styles.input} value={newStudent.rollNumber} onChangeText={(text) => setNewStudent({ ...newStudent, rollNumber: text })} placeholder="Enter roll number" placeholderTextColor="#9ca3af" keyboardType="numeric" />
 
-            <Text className="text-sm text-gray-600 mb-2">Class</Text>
-            <View className="flex-row mb-6">
+            <Text style={styles.inputLabel}>Class</Text>
+            <View style={styles.classRow}>
               {['CS-A', 'CS-B'].map((cls) => (
-                <TouchableOpacity
-                  key={cls}
-                  className={`px-6 py-3 rounded-lg mr-2 ${
-                    newStudent.class === cls ? 'bg-blue-600' : 'bg-gray-100'
-                  }`}
-                  onPress={() => setNewStudent({ ...newStudent, class: cls })}
-                >
-                  <Text
-                    className={`font-semibold ${
-                      newStudent.class === cls ? 'text-white' : 'text-gray-700'
-                    }`}
-                  >
-                    {cls}
-                  </Text>
+                <TouchableOpacity key={cls} style={[styles.chip, newStudent.class === cls ? styles.chipActive : styles.chipInactive]} onPress={() => setNewStudent({ ...newStudent, class: cls })}>
+                  <Text style={[styles.chipText, newStudent.class === cls ? styles.chipTextActive : styles.chipTextInactive]}>{cls}</Text>
                 </TouchableOpacity>
               ))}
             </View>
 
-            <TouchableOpacity
-              className="bg-blue-600 rounded-lg p-4"
-              onPress={handleAddStudent}
-            >
-              <Text className="text-center text-white font-semibold text-lg">
-                Add Student
-              </Text>
+            <TouchableOpacity style={styles.submitBtn} onPress={handleAddStudent}>
+              <Text style={styles.submitBtnText}>Add Student</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -225,3 +103,27 @@ export default function StudentsScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: '#f9fafb' },
+  filterBar: { backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
+  filterBarContent: { paddingHorizontal: 16, paddingVertical: 12 },
+  chip: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8, marginRight: 8 },
+  chipActive: { backgroundColor: '#2563eb' },
+  chipInactive: { backgroundColor: '#f3f4f6' },
+  chipText: { fontWeight: '600' },
+  chipTextActive: { color: 'white' },
+  chipTextInactive: { color: '#374151' },
+  list: { flex: 1, paddingHorizontal: 16, paddingTop: 16 },
+  emptyState: { alignItems: 'center', justifyContent: 'center', paddingVertical: 80 },
+  emptyText: { color: '#9ca3af', fontSize: 18, marginTop: 16 },
+  modalOverlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.5)' },
+  modalContent: { backgroundColor: 'white', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24 },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
+  modalTitle: { fontSize: 24, fontWeight: 'bold', color: '#1f2937' },
+  inputLabel: { fontSize: 14, color: '#4b5563', marginBottom: 8 },
+  input: { backgroundColor: '#f3f4f6', borderRadius: 8, padding: 16, marginBottom: 16, color: '#1f2937' },
+  classRow: { flexDirection: 'row', marginBottom: 24 },
+  submitBtn: { backgroundColor: '#2563eb', borderRadius: 8, padding: 16 },
+  submitBtnText: { textAlign: 'center', color: 'white', fontWeight: '600', fontSize: 18 },
+});

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface HeaderProps {
   title: string;
@@ -19,12 +19,12 @@ export const Header: React.FC<HeaderProps> = ({
   rightButton 
 }) => {
   return (
-    <View className="bg-blue-600 px-4 pt-12 pb-6">
-      <View className="flex-row items-center justify-between mb-2">
+    <View style={styles.container}>
+      <View style={styles.topRow}>
         {onBack ? (
-          <TouchableOpacity onPress={onBack} className="flex-row items-center">
+          <TouchableOpacity onPress={onBack} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="white" />
-            <Text className="text-white text-lg ml-2">Back</Text>
+            <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
         ) : (
           <View />
@@ -37,10 +37,44 @@ export const Header: React.FC<HeaderProps> = ({
         )}
       </View>
       
-      <Text className="text-white text-3xl font-bold">{title}</Text>
+      <Text style={styles.title}>{title}</Text>
       {subtitle && (
-        <Text className="text-blue-100 text-base mt-1">{subtitle}</Text>
+        <Text style={styles.subtitle}>{subtitle}</Text>
       )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#2563eb',
+    paddingHorizontal: 16,
+    paddingTop: 48,
+    paddingBottom: 24,
+  },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backText: {
+    color: 'white',
+    fontSize: 18,
+    marginLeft: 8,
+  },
+  title: {
+    color: 'white',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  subtitle: {
+    color: '#bfdbfe',
+    fontSize: 16,
+    marginTop: 4,
+  },
+});

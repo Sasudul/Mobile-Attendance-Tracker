@@ -1,10 +1,10 @@
 import { database } from '@/database/db';
 import { Subject } from '@/types';
-import { getCurrentDate } from '@/utils/helpers';
+import { getCurrentDate } from '@/utils/helper';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -43,134 +43,80 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
-      <ScrollView className="flex-1">
-        {/* Header */}
-        <View className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-b-3xl p-6 mb-6">
-          <Text className="text-white text-3xl font-bold mb-2">
-            Attendance System
-          </Text>
-          <Text className="text-blue-100 text-base">
-            Manage student attendance efficiently
-          </Text>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Attendance System</Text>
+          <Text style={styles.headerSubtitle}>Manage student attendance efficiently</Text>
         </View>
 
-        {/* Quick Actions */}
-        <View className="px-4 mb-6">
-          <Text className="text-lg font-semibold text-gray-800 mb-4">
-            Quick Actions
-          </Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Quick Actions</Text>
 
-          <TouchableOpacity
-            className="bg-white rounded-xl p-5 mb-3 shadow-sm border border-gray-100"
-            onPress={handleMarkAttendance}
-          >
-            <View className="flex-row items-center">
-              <View className="bg-blue-100 p-3 rounded-lg mr-4">
+          <TouchableOpacity style={styles.actionCard} onPress={handleMarkAttendance}>
+            <View style={styles.actionRow}>
+              <View style={[styles.iconBg, { backgroundColor: '#dbeafe' }]}>
                 <Ionicons name="checkmark-circle" size={28} color="#2563eb" />
               </View>
-              <View className="flex-1">
-                <Text className="text-lg font-semibold text-gray-800">
-                  Mark Attendance
-                </Text>
-                <Text className="text-sm text-gray-500 mt-1">
-                  Take attendance for today's class
-                </Text>
+              <View style={styles.actionInfo}>
+                <Text style={styles.actionTitle}>Mark Attendance</Text>
+                <Text style={styles.actionSubtitle}>Take attendance for today's class</Text>
               </View>
               <Ionicons name="chevron-forward" size={24} color="#9ca3af" />
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            className="bg-white rounded-xl p-5 mb-3 shadow-sm border border-gray-100"
-            onPress={() => router.push('/history')}
-          >
-            <View className="flex-row items-center">
-              <View className="bg-purple-100 p-3 rounded-lg mr-4">
+          <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/history')}>
+            <View style={styles.actionRow}>
+              <View style={[styles.iconBg, { backgroundColor: '#f3e8ff' }]}>
                 <Ionicons name="bar-chart" size={28} color="#9333ea" />
               </View>
-              <View className="flex-1">
-                <Text className="text-lg font-semibold text-gray-800">
-                  View Reports
-                </Text>
-                <Text className="text-sm text-gray-500 mt-1">
-                  Check attendance records
-                </Text>
+              <View style={styles.actionInfo}>
+                <Text style={styles.actionTitle}>View Reports</Text>
+                <Text style={styles.actionSubtitle}>Check attendance records</Text>
               </View>
               <Ionicons name="chevron-forward" size={24} color="#9ca3af" />
             </View>
           </TouchableOpacity>
         </View>
 
-        {/* Settings */}
-        <View className="px-4">
-          <Text className="text-lg font-semibold text-gray-800 mb-4">
-            Session Settings
-          </Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Session Settings</Text>
 
-          <View className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            {/* Class Selection */}
-            <Text className="text-sm font-semibold text-gray-700 mb-2">
-              Class
-            </Text>
-            <View className="flex-row mb-4">
+          <View style={styles.settingsCard}>
+            <Text style={styles.fieldLabel}>Class</Text>
+            <View style={styles.chipRow}>
               {['CS-A', 'CS-B'].map((cls) => (
                 <TouchableOpacity
                   key={cls}
-                  className={`px-6 py-3 rounded-lg mr-2 ${
-                    selectedClass === cls ? 'bg-blue-600' : 'bg-gray-100'
-                  }`}
+                  style={[styles.chip, selectedClass === cls ? styles.chipActive : styles.chipInactive]}
                   onPress={() => setSelectedClass(cls)}
                 >
-                  <Text
-                    className={`font-semibold ${
-                      selectedClass === cls ? 'text-white' : 'text-gray-700'
-                    }`}
-                  >
+                  <Text style={[styles.chipText, selectedClass === cls ? styles.chipTextActive : styles.chipTextInactive]}>
                     {cls}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
 
-            {/* Subject Selection */}
-            <Text className="text-sm font-semibold text-gray-700 mb-2">
-              Subject
-            </Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              className="mb-4"
-            >
+            <Text style={styles.fieldLabel}>Subject</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipScroll}>
               {subjects.map((subject) => (
                 <TouchableOpacity
                   key={subject.id}
-                  className={`px-6 py-3 rounded-lg mr-2 ${
-                    selectedSubject?.id === subject.id
-                      ? 'bg-blue-600'
-                      : 'bg-gray-100'
-                  }`}
+                  style={[styles.chip, selectedSubject?.id === subject.id ? styles.chipActive : styles.chipInactive]}
                   onPress={() => setSelectedSubject(subject)}
                 >
-                  <Text
-                    className={`font-semibold ${
-                      selectedSubject?.id === subject.id
-                        ? 'text-white'
-                        : 'text-gray-700'
-                    }`}
-                  >
+                  <Text style={[styles.chipText, selectedSubject?.id === subject.id ? styles.chipTextActive : styles.chipTextInactive]}>
                     {subject.name}
                   </Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
 
-            {/* Date Display */}
-            <Text className="text-sm font-semibold text-gray-700 mb-2">
-              Date
-            </Text>
-            <View className="bg-gray-100 rounded-lg p-4">
-              <Text className="text-gray-800 font-medium">
+            <Text style={styles.fieldLabel}>Date</Text>
+            <View style={styles.dateBox}>
+              <Text style={styles.dateText}>
                 {new Date(attendanceDate).toLocaleDateString('en-US', {
                   weekday: 'long',
                   year: 'numeric',
@@ -185,3 +131,31 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: '#f9fafb' },
+  scrollView: { flex: 1 },
+  header: { backgroundColor: '#2563eb', borderBottomLeftRadius: 24, borderBottomRightRadius: 24, padding: 24, marginBottom: 24 },
+  headerTitle: { color: 'white', fontSize: 30, fontWeight: 'bold', marginBottom: 8 },
+  headerSubtitle: { color: '#bfdbfe', fontSize: 16 },
+  section: { paddingHorizontal: 16, marginBottom: 24 },
+  sectionTitle: { fontSize: 18, fontWeight: '600', color: '#1f2937', marginBottom: 16 },
+  actionCard: { backgroundColor: 'white', borderRadius: 12, padding: 20, marginBottom: 12, borderWidth: 1, borderColor: '#f3f4f6', elevation: 1 },
+  actionRow: { flexDirection: 'row', alignItems: 'center' },
+  iconBg: { padding: 12, borderRadius: 8, marginRight: 16 },
+  actionInfo: { flex: 1 },
+  actionTitle: { fontSize: 18, fontWeight: '600', color: '#1f2937' },
+  actionSubtitle: { fontSize: 14, color: '#6b7280', marginTop: 4 },
+  settingsCard: { backgroundColor: 'white', borderRadius: 12, padding: 16, borderWidth: 1, borderColor: '#f3f4f6', elevation: 1 },
+  fieldLabel: { fontSize: 14, fontWeight: '600', color: '#374151', marginBottom: 8 },
+  chipRow: { flexDirection: 'row', marginBottom: 16 },
+  chipScroll: { marginBottom: 16 },
+  chip: { paddingHorizontal: 24, paddingVertical: 12, borderRadius: 8, marginRight: 8 },
+  chipActive: { backgroundColor: '#2563eb' },
+  chipInactive: { backgroundColor: '#f3f4f6' },
+  chipText: { fontWeight: '600' },
+  chipTextActive: { color: 'white' },
+  chipTextInactive: { color: '#374151' },
+  dateBox: { backgroundColor: '#f3f4f6', borderRadius: 8, padding: 16 },
+  dateText: { color: '#1f2937', fontWeight: '500' },
+});

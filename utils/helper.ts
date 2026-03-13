@@ -24,9 +24,3 @@ export const getAttendancePercentage = (present: number, total: number): number 
   if (total === 0) return 0;
   return Math.round((present / total) * 100);
 };
-
-export const shareCSV = async (csvContent: string, filename: string) => {
-  // This will be implemented with expo-sharing
-  console.log('Sharing CSV:', filename);
-  return csvContent;
-};

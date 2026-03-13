@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface AttendanceCardProps {
   studentName: string;
@@ -15,40 +15,28 @@ export const AttendanceCard: React.FC<AttendanceCardProps> = ({
   onStatusChange
 }) => {
   return (
-    <View className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-gray-100">
-      <View className="flex-row justify-between items-center">
-        <View className="flex-1">
-          <Text className="text-lg font-semibold text-gray-800">
-            {studentName}
-          </Text>
-          <Text className="text-sm text-gray-500 mt-1">
-            Roll No: {rollNumber}
-          </Text>
+    <View style={styles.card}>
+      <View style={styles.row}>
+        <View style={styles.info}>
+          <Text style={styles.name}>{studentName}</Text>
+          <Text style={styles.rollNo}>Roll No: {rollNumber}</Text>
         </View>
         
-        <View className="flex-row space-x-2">
+        <View style={styles.buttonRow}>
           <TouchableOpacity
-            className={`px-6 py-3 rounded-lg ${
-              status === 'present' ? 'bg-green-500' : 'bg-gray-200'
-            }`}
+            style={[styles.statusBtn, status === 'present' ? styles.presentActive : styles.statusInactive]}
             onPress={() => onStatusChange('present')}
           >
-            <Text className={`font-semibold ${
-              status === 'present' ? 'text-white' : 'text-gray-600'
-            }`}>
+            <Text style={[styles.statusText, status === 'present' ? styles.activeText : styles.inactiveText]}>
               P
             </Text>
           </TouchableOpacity>
           
           <TouchableOpacity
-            className={`px-6 py-3 rounded-lg ${
-              status === 'absent' ? 'bg-red-500' : 'bg-gray-200'
-            }`}
+            style={[styles.statusBtn, status === 'absent' ? styles.absentActive : styles.statusInactive]}
             onPress={() => onStatusChange('absent')}
           >
-            <Text className={`font-semibold ${
-              status === 'absent' ? 'text-white' : 'text-gray-600'
-            }`}>
+            <Text style={[styles.statusText, status === 'absent' ? styles.activeText : styles.inactiveText]}>
               A
             </Text>
           </TouchableOpacity>
@@ -57,3 +45,64 @@ export const AttendanceCard: React.FC<AttendanceCardProps> = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#f3f4f6',
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  info: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1f2937',
+  },
+  rollNo: {
+    fontSize: 14,
+    color: '#6b7280',
+    marginTop: 4,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  statusBtn: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  presentActive: {
+    backgroundColor: '#22c55e',
+  },
+  absentActive: {
+    backgroundColor: '#ef4444',
+  },
+  statusInactive: {
+    backgroundColor: '#e5e7eb',
+  },
+  statusText: {
+    fontWeight: '600',
+  },
+  activeText: {
+    color: 'white',
+  },
+  inactiveText: {
+    color: '#4b5563',
+  },
+});

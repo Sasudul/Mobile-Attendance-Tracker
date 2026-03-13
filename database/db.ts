@@ -43,7 +43,6 @@ class Database {
     `);
   }
 
-  // Students
   getAllStudents(): Student[] {
     return this.db.getAllSync<Student>('SELECT * FROM students ORDER BY rollNumber');
   }
@@ -66,7 +65,6 @@ class Database {
     this.db.runSync('DELETE FROM students WHERE id = ?', [id]);
   }
 
-  // Subjects
   getAllSubjects(): Subject[] {
     return this.db.getAllSync<Subject>('SELECT * FROM subjects ORDER BY name');
   }
@@ -78,7 +76,6 @@ class Database {
     );
   }
 
-  // Attendance
   saveAttendance(records: Omit<AttendanceRecord, 'id' | 'timestamp'>[]): void {
     const statement = this.db.prepareSync(
       'INSERT INTO attendance (studentId, studentName, rollNumber, status, date, subject, class) VALUES (?, ?, ?, ?, ?, ?, ?)'

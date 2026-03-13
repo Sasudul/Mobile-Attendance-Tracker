@@ -1,7 +1,7 @@
 import { Student } from '@/types';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface StudentCardProps {
   student: Student;
@@ -13,23 +13,21 @@ export const StudentCard: React.FC<StudentCardProps> = ({
   onDelete 
 }) => {
   return (
-    <View className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-gray-100">
-      <View className="flex-row justify-between items-center">
-        <View className="flex-1">
-          <Text className="text-lg font-semibold text-gray-800">
-            {student.name}
-          </Text>
-          <View className="flex-row mt-1">
-            <Text className="text-sm text-gray-500">Roll: {student.rollNumber}</Text>
-            <Text className="text-sm text-gray-400 mx-2">•</Text>
-            <Text className="text-sm text-gray-500">Class: {student.class}</Text>
+    <View style={styles.card}>
+      <View style={styles.row}>
+        <View style={styles.info}>
+          <Text style={styles.name}>{student.name}</Text>
+          <View style={styles.detailRow}>
+            <Text style={styles.detail}>Roll: {student.rollNumber}</Text>
+            <Text style={styles.dot}>•</Text>
+            <Text style={styles.detail}>Class: {student.class}</Text>
           </View>
         </View>
         
         {onDelete && (
           <TouchableOpacity 
             onPress={() => onDelete(student.id)}
-            className="bg-red-50 p-2 rounded-lg"
+            style={styles.deleteBtn}
           >
             <Ionicons name="trash-outline" size={20} color="#ef4444" />
           </TouchableOpacity>
@@ -38,3 +36,50 @@ export const StudentCard: React.FC<StudentCardProps> = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#f3f4f6',
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  info: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1f2937',
+  },
+  detailRow: {
+    flexDirection: 'row',
+    marginTop: 4,
+  },
+  detail: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  dot: {
+    fontSize: 14,
+    color: '#9ca3af',
+    marginHorizontal: 8,
+  },
+  deleteBtn: {
+    backgroundColor: '#fef2f2',
+    padding: 8,
+    borderRadius: 8,
+  },
+});
