@@ -81,7 +81,7 @@ export default function MarkAttendanceScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#f9fafb' },
+  safeArea: { flex: 1, backgroundColor: '#f0f4ff' },
   list: { flex: 1, paddingHorizontal: 16, paddingTop: 16 },
   footer: { backgroundColor: 'white', borderTopWidth: 1, borderTopColor: '#e5e7eb', padding: 16 },
   statsRow: { flexDirection: 'row', justifyContent: 'space-around' },

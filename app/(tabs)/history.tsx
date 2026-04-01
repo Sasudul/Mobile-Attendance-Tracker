@@ -3,7 +3,8 @@ import { database } from '@/database/db';
 import { AttendanceRecord } from '@/types';
 import { formatDate, formatTime } from '@/utils/helper';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import React, { useCallback, useState } from 'react';
 import { Alert, ScrollView, Share, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -13,7 +14,11 @@ export default function HistoryScreen() {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
 
-  useEffect(() => { loadHistory(); }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadHistory();
+    }, [])
+  );
 
   const loadHistory = () => { setAttendanceHistory(database.getAllAttendance()); };
 
@@ -104,7 +109,7 @@ export default function HistoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#f9fafb' },
+  safeArea: { flex: 1, backgroundColor: '#f0f4ff' },
   filterSection: { backgroundColor: 'white', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
   filterLabel: { fontSize: 14, fontWeight: '600', color: '#374151', marginBottom: 8 },
   filterInput: { backgroundColor: '#f3f4f6', borderRadius: 8, padding: 12, color: '#1f2937' },
